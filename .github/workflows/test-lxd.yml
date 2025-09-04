@@ -18,17 +18,19 @@ jobs:
           sudo snap install lxd
           sudo lxd init --auto
           sudo usermod -aG lxd $USER
+          # Wait for LXD to be ready
+          sleep 5
 
-      - name: Launch LXD container
+      - name: Launch LXD VM
         run: |
-          sudo -u $USER lxc launch images:ubuntu/24.04 test-container
-          sleep 10
+          sudo -u $USER lxc launch ubuntu:24.04 test-vm --vm
+          sleep 15
 
-      - name: Run command inside container
+      - name: Run command inside VM
         run: |
-          sudo -u $USER lxc exec test-container -- bash -c "echo Hello from LXD container"
+          sudo -u $USER lxc exec test-vm -- bash -c "echo Hello from LXD VM"
 
-      - name: Stop and delete container
+      - name: Stop and delete VM
         run: |
-          sudo -u $USER lxc stop test-container
-          sudo -u $USER lxc delete test-container
+          sudo -u $USER lxc stop test-vm
+          sudo -u $USER lxc delete test-vm
