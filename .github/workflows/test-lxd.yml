@@ -24,7 +24,14 @@ jobs:
       - name: Launch LXD VM
         run: |
           sudo -u $USER lxc launch ubuntu:24.04 test-vm --vm
-          sleep 15
+          echo "Waiting for VM to start and agent to be ready..."
+          sleep 30
+
+      - name: Wait for VM agent
+        run: |
+          # Wait for the LXD agent to be running inside the VM
+          timeout 120 bash -c 'until sudo -u $USER lxc info test-vm | grep -q "Agent version"; do echo "Waiting for LXD agent..."; sleep 5; done'
+          sudo -u $USER lxc info test-vm
 
       - name: Run command inside VM
         run: |
