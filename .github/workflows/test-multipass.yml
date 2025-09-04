@@ -21,7 +21,7 @@ jobs:
 
       - name: Launch Multipass VM
         run: |
-          sudo multipass launch -n test-vm
+          sudo multipass launch 24.04 -n test-vm
           sleep 10
 
       - name: Run command inside VM
