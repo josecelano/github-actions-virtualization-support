@@ -1,0 +1,36 @@
+name: Test LXD Provision
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lxd-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install LXD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lxd
+          sudo lxd init --auto
+          sudo usermod -aG lxd $USER
+          newgrp lxd
+
+      - name: Launch LXD container
+        run: |
+          lxc launch images:ubuntu/24.04 test-container
+          sleep 10
+
+      - name: Run command inside container
+        run: |
+          lxc exec test-container -- bash -c "echo Hello from LXD container"
+
+      - name: Stop and delete container
+        run: |
+          lxc stop test-container
+          lxc delete test-container

@@ -1,1 +1,31 @@
-# github-actions-virtualization-support
+# GitHub Actions Virtualization Support Test
+
+This project provides minimal workflows to test support for LXD and Multipass virtualization tools on GitHub Ubuntu runners.
+
+## Purpose
+
+- Verify if LXD and Multipass can be used for full virtualization on GitHub-hosted Ubuntu runners.
+- Each workflow launches a VM/container and runs a simple command inside to confirm functionality.
+
+## Background
+
+- KVM/Libvirt is not supported on shared runners.
+- LXD and Multipass may work, but official documentation is unclear about their virtualization capabilities.
+- Related issue: [actions/runner-images#12933](https://github.com/actions/runner-images/issues/12933)
+- Reference project: [torrust/torrust-tracker-deploy-rust-poc](https://github.com/torrust/torrust-tracker-deploy-rust-poc)
+
+## Workflows
+
+- `.github/workflows/test-lxd.yml`: Tests LXD support
+- `.github/workflows/test-multipass.yml`: Tests Multipass support
+- `.github/workflows/test-kvm.yml`: Tests KVM/Libvirt support (expected to fail)
+
+## Usage
+
+- Fork or clone this repository.
+- Review workflow files for minimal LXD and Multipass tests.
+
+## Notes
+
+- No extra tools (like Ansible) are installed.
+- Only basic VM/container creation and command execution are performed.

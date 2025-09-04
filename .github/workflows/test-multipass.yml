@@ -1,0 +1,33 @@
+name: Test Multipass Provision
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  multipass-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Multipass
+        run: |
+          sudo snap install multipass --classic
+
+      - name: Launch Multipass VM
+        run: |
+          multipass launch -n test-vm
+          sleep 10
+
+      - name: Run command inside VM
+        run: |
+          multipass exec test-vm -- bash -c "echo Hello from Multipass VM"
+
+      - name: Stop and delete VM
+        run: |
+          multipass stop test-vm
+          multipass delete test-vm
+          multipass purge
