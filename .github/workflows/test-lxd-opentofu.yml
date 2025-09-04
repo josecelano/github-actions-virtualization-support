@@ -131,7 +131,6 @@ jobs:
           sudo lxc exec test-vm -- bash -c "echo Hello from LXD VM via OpenTofu"
           sudo lxc exec test-vm -- cat /etc/os-release
           sudo lxc exec test-vm -- cloud-init status
-          sudo lxc exec test-vm -- systemctl status ssh --no-pager
 
       - name: Get OpenTofu outputs
         working-directory: config/tofu/lxd
