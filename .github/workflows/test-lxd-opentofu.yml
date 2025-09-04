@@ -68,7 +68,7 @@ jobs:
           sudo lxc info test-vm
 
           # Wait for container to be ready
-          echo "Waiting for container to be fully initialized..."
+          echo "Waiting for VM to be fully initialized..."
           sleep 15
 
           # Wait up to 5 minutes for cloud-init to complete
@@ -76,16 +76,16 @@ jobs:
           elapsed=0
           while [ $elapsed -lt $timeout ]; do
             if sudo lxc exec test-vm -- test -f /tmp/provision_complete 2>/dev/null; then
-              echo "Container provisioning completed successfully!"
+              echo "VM provisioning completed successfully!"
               break
             fi
-            echo "Waiting for container provisioning to complete... ($elapsed/$timeout seconds)"
+            echo "Waiting for VM provisioning to complete... ($elapsed/$timeout seconds)"
             sleep 10
             elapsed=$((elapsed + 10))
           done
 
           if [ $elapsed -ge $timeout ]; then
-            echo "Timeout waiting for container provisioning to complete"
+            echo "Timeout waiting for VM provisioning to complete"
             exit 1
           fi
 
