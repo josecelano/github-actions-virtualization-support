@@ -37,9 +37,17 @@ jobs:
 
       - name: Install OpenTofu
         run: |
-          curl -Lo opentofu.tar.gz https://github.com/opentofu/opentofu/releases/latest/download/tofu_1.8.2_linux_amd64.tar.gz
-          tar -xzf opentofu.tar.gz
-          sudo mv tofu /usr/local/bin/
+          # Check if tofu is already installed
+          if command -v tofu &> /dev/null; then
+              echo "OpenTofu is already installed, skipping installation"
+              exit 0
+          fi
+
+          # Download and install OpenTofu using official installer
+          curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+          chmod +x install-opentofu.sh
+          sudo ./install-opentofu.sh --install-method deb
+          rm install-opentofu.sh
           tofu version
 
       - name: Initialize and apply OpenTofu
