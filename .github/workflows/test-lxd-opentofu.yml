@@ -1,0 +1,84 @@
+name: Test LXD VM with OpenTofu
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lxd-opentofu-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check KVM support
+        run: |
+          echo "Checking KVM kernel module availability..."
+          lsmod | grep kvm || echo "KVM modules not loaded"
+          ls -la /dev/kvm || echo "/dev/kvm not available"
+
+      - name: Install and configure LXD
+        run: |
+          sudo snap install lxd
+          # Wait for LXD daemon to start
+          echo "Waiting for LXD daemon to start..."
+          sleep 15
+          # Initialize LXD with default settings
+          sudo lxd init --auto
+          # Add runner to lxd group
+          sudo usermod -a -G lxd runner
+          # Fix socket permissions for CI environment
+          sudo chmod 666 /var/snap/lxd/common/lxd/unix.socket
+          # Test basic LXD functionality
+          sudo lxc list
+
+      - name: Install OpenTofu
+        run: |
+          curl -Lo opentofu.tar.gz https://github.com/opentofu/opentofu/releases/latest/download/tofu_1.8.2_linux_amd64.tar.gz
+          tar -xzf opentofu.tar.gz
+          sudo mv tofu /usr/local/bin/
+          tofu version
+
+      - name: Initialize and apply OpenTofu
+        working-directory: config/tofu/lxd
+        run: |
+          tofu init
+          tofu validate
+          tofu plan
+          sudo -E tofu apply -auto-approve
+
+      - name: Test LXD VM functionality
+        run: |
+          # Wait for VM to start
+          sleep 15
+
+          # Test basic functionality
+          sudo lxc list
+          sudo lxc info test-vm
+
+          # Wait for cloud-init to complete
+          echo "Waiting for cloud-init to complete..."
+          timeout 120 bash -c 'until sudo lxc exec test-vm -- test -f /tmp/provision_complete 2>/dev/null; do echo "Waiting for cloud-init..."; sleep 5; done'
+
+          # Test command execution
+          sudo lxc exec test-vm -- bash -c "echo Hello from LXD VM via OpenTofu"
+          sudo lxc exec test-vm -- cat /etc/os-release
+          sudo lxc exec test-vm -- cloud-init status
+          sudo lxc exec test-vm -- systemctl status ssh --no-pager
+
+      - name: Get OpenTofu outputs
+        working-directory: config/tofu/lxd
+        run: sudo -E tofu output
+
+      - name: Cleanup
+        if: always()
+        working-directory: config/tofu/lxd
+        run: |
+          echo "Cleaning up..."
+          sudo -E tofu destroy -auto-approve || true
+          sudo lxc delete test-vm --force || true
+          sudo lxc profile delete test-profile || true
+          sudo lxc list
