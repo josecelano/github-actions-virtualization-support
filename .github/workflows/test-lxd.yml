@@ -31,21 +31,17 @@ jobs:
       - name: Launch LXD VM
         run: |
           sudo lxc launch ubuntu:24.04 test-vm --vm
-          echo "Waiting for VM to start and agent to be ready..."
-          sleep 30
 
       - name: Wait for VM to be ready
         run: |
           echo "Waiting for VM to be fully initialized..."
-          sleep 30
 
           # Debug: Check VM status
           echo "=== VM Status ==="
           sudo lxc list
           sudo lxc info test-vm
 
-          # For basic Ubuntu images without custom cloud-init, we'll check for basic readiness
-          # instead of waiting for /tmp/provision_complete which won't be created
+          # We check for basic readiness instead of waiting for cloud-init completion
           timeout=300
           elapsed=0
           while [ $elapsed -lt $timeout ]; do

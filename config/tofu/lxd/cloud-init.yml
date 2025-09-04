@@ -1,33 +1,6 @@
 #cloud-config
 package_update: true
-package_upgrade: true
 
-# Create a user
-users:
-  - name: testuser
-    gecos: Test User
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    shell: /bin/bash
-    lock_passwd: false
-    passwd: $6$rounds=4096$saltsalt$L/Zd4wXNe1xehM5ajJB4O4tGHmT4c3mGqQiV/TGhO9gJhTvIf9QRRDBj8sE3MO6Y0KxnxMpxp6WaOq0HZ8Q0p1
-
-# Install basic packages
-packages:
-  - curl
-  - wget
-  - vim
-  - htop
-
-# Run commands after user setup
+# Just log that cloud-init ran
 runcmd:
-  - echo "VM provisioning started" > /tmp/provision_log
-  - systemctl enable ssh
-  - systemctl start ssh
-  - echo "VM provisioning completed" > /tmp/provision_complete
-  - date >> /tmp/provision_complete
-
-# Set timezone
-timezone: UTC
-
-# Enable password authentication for testing
-ssh_pwauth: true
+  - echo "Cloud-init completed at $(date)" > /tmp/cloud-init-log
