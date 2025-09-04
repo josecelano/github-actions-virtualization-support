@@ -2,6 +2,14 @@
 
 This project provides minimal workflows to test support for LXD and Multipass virtualization tools on GitHub Ubuntu runners.
 
+## Not supported
+
+[![Test KVM/Libvirt Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-kvm.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-kvm.yml)
+
+## Supported
+
+[![Test LXD Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd.yml) [![Test Multipass Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-multipass.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-multipass.yml)
+
 ## Purpose
 
 - Verify if LXD and Multipass can be used for full virtualization on GitHub-hosted Ubuntu runners.
