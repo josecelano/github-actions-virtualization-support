@@ -16,18 +16,20 @@ jobs:
       - name: Install Multipass
         run: |
           sudo snap install multipass --classic
+          sudo snap wait system seed.loaded
+          sleep 5
 
       - name: Launch Multipass VM
         run: |
-          multipass launch -n test-vm
+          sudo multipass launch -n test-vm
           sleep 10
 
       - name: Run command inside VM
         run: |
-          multipass exec test-vm -- bash -c "echo Hello from Multipass VM"
+          sudo multipass exec test-vm -- bash -c "echo Hello from Multipass VM"
 
       - name: Stop and delete VM
         run: |
-          multipass stop test-vm
-          multipass delete test-vm
-          multipass purge
+          sudo multipass stop test-vm
+          sudo multipass delete test-vm
+          sudo multipass purge
