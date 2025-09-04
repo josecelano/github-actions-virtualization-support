@@ -6,6 +6,7 @@ This project provides minimal workflows to test support for LXD and Multipass vi
 
 - Verify if LXD and Multipass can be used for full virtualization on GitHub-hosted Ubuntu runners.
 - Each workflow launches a VM/container and runs a simple command inside to confirm functionality.
+- Demonstrate that KVM/Libvirt fails on shared runners as expected.
 
 ## Background
 
@@ -16,9 +17,9 @@ This project provides minimal workflows to test support for LXD and Multipass vi
 
 ## Workflows
 
-- `.github/workflows/test-lxd.yml`: Tests LXD support
-- `.github/workflows/test-multipass.yml`: Tests Multipass support
-- `.github/workflows/test-kvm.yml`: Tests KVM/Libvirt support (expected to fail)
+- `.github/workflows/test-lxd.yml`: Tests LXD support (should work)
+- `.github/workflows/test-multipass.yml`: Tests Multipass support (should work)
+- `.github/workflows/test-kvm.yml`: Tests KVM/Libvirt support (**expected to fail** - demonstrates the limitation)
 
 ## Usage
 
@@ -29,3 +30,4 @@ This project provides minimal workflows to test support for LXD and Multipass vi
 
 - No extra tools (like Ansible) are installed.
 - Only basic VM/container creation and command execution are performed.
+- The KVM/Libvirt workflow is intentionally included to show it fails with "Permission denied" errors when trying to connect to the hypervisor, confirming that full KVM virtualization is not available on shared runners.
