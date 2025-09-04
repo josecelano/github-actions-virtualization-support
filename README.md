@@ -8,7 +8,7 @@ This project provides minimal workflows to test support for LXD and Multipass vi
 
 ## Supported
 
-[![Test LXD Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd.yml) [![Test Multipass Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-multipass.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-multipass.yml)
+[![Test LXD Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd.yml) [![Test LXD VM with OpenTofu](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd-opentofu.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-lxd-opentofu.yml) [![Test Multipass Provision](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-multipass.yml/badge.svg)](https://github.com/josecelano/github-actions-virtualization-support/actions/workflows/test-multipass.yml)
 
 ## Purpose
 
