@@ -16,28 +16,35 @@ jobs:
       - name: Install LXD
         run: |
           sudo snap install lxd
+          # Wait for LXD daemon to start
+          echo "Waiting for LXD daemon to start..."
+          sleep 15
+          # Initialize LXD with default settings
           sudo lxd init --auto
-          sudo usermod -aG lxd $USER
-          # Wait for LXD to be ready
-          sleep 5
+          # Add runner to lxd group
+          sudo usermod -a -G lxd runner
+          # Fix socket permissions for CI environment
+          sudo chmod 666 /var/snap/lxd/common/lxd/unix.socket
+          # Test basic LXD functionality
+          sudo lxc list
 
       - name: Launch LXD VM
         run: |
-          sudo -u $USER lxc launch ubuntu:24.04 test-vm --vm
+          sudo lxc launch ubuntu:24.04 test-vm --vm
           echo "Waiting for VM to start and agent to be ready..."
           sleep 30
 
       - name: Wait for VM agent
         run: |
           # Wait for the LXD agent to be running inside the VM
-          timeout 120 bash -c 'until sudo -u $USER lxc info test-vm | grep -q "Agent version"; do echo "Waiting for LXD agent..."; sleep 5; done'
-          sudo -u $USER lxc info test-vm
+          timeout 120 bash -c 'until sudo lxc info test-vm | grep -q "Agent version"; do echo "Waiting for LXD agent..."; sleep 5; done'
+          sudo lxc info test-vm
 
       - name: Run command inside VM
         run: |
-          sudo -u $USER lxc exec test-vm -- bash -c "echo Hello from LXD VM"
+          sudo lxc exec test-vm -- bash -c "echo Hello from LXD VM"
 
       - name: Stop and delete VM
         run: |
-          sudo -u $USER lxc stop test-vm
-          sudo -u $USER lxc delete test-vm
+          sudo lxc stop test-vm
+          sudo lxc delete test-vm
