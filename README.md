@@ -25,7 +25,8 @@ This project provides minimal workflows to test support for LXD and Multipass vi
 
 ## Workflows
 
-- `.github/workflows/test-lxd.yml`: Tests LXD support (should work)
+- `.github/workflows/test-lxd.yml`: Tests LXD VM support (may fail due to virtualization limits)
+- `.github/workflows/test-lxd-opentofu.yml`: Tests LXD VM support via OpenTofu (may fail due to nested virtualization limits)
 - `.github/workflows/test-multipass.yml`: Tests Multipass support (should work)
 - `.github/workflows/test-kvm.yml`: Tests KVM/Libvirt support (**expected to fail** - demonstrates the limitation)
 
@@ -39,3 +40,4 @@ This project provides minimal workflows to test support for LXD and Multipass vi
 - No extra tools (like Ansible) are installed.
 - Only basic VM/container creation and command execution are performed.
 - The KVM/Libvirt workflow is intentionally included to show it fails with "Permission denied" errors when trying to connect to the hypervisor, confirming that full KVM virtualization is not available on shared runners.
+- LXD VM support may also fail on shared runners due to nested virtualization limitations - GitHub runners are themselves VMs, and LXD VMs require KVM kernel modules that may not be available in nested environments.
